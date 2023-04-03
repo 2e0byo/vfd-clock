@@ -106,7 +106,7 @@ async def get(url: str) -> Response:
         sock = ussl.wrap_socket(sock)
         sreader = asyncio.StreamReader(sock)
         swriter = asyncio.StreamWriter(sock, {})
-        swriter.write(b"GET /%s HTTP/1.0\r\n" % path)
+        swriter.write(b"GET /%s HTTP/1.1\r\n" % path)
         swriter.write(b"Host: %s\r\n" % host)
         await swriter.drain()
         swriter.write(b"Connection: close\r\n\r\n")
