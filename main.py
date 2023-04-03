@@ -187,7 +187,7 @@ class MatrixDisplay:
         for i in range(8):
             x = val & 1
             self._D_pins[i](x)
-            val >>= 1  # or invert direction
+            val >>= 1
         self._digit_pins[digit](1)
         await asyncio.sleep_ms(self.pulse_duration)
         self._digit_pins[digit](0)
