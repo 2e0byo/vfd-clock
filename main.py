@@ -218,7 +218,6 @@ class MatrixDisplay:
             self.leds[0] = False
 
         msg = "{:>6}".format(msg)
-        # digits backwards...
         for i, c in enumerate(msg):
             await self._write_digit(self._encode_char(c), i)
 
