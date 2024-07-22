@@ -14,6 +14,8 @@ def instrument(f, name=""):
     print(f"{name} Took: {time.ticks_diff(end, start)} ms")
     return resp
 
+def log(*args) -> None:
+    print("LOG:", *args)
 
 def settime():
     try:
@@ -83,13 +85,32 @@ class Response:
 
     @property
     def json(self) -> dict:
+        log("aggressively decoding as json:", self.content)
+        # for some reason there seems to be junk around the json
+        start, end = None, None
+        stack = []
+        for i, c in enumerate(self.content.decode()):
+            if c ==  "{":
+                stack.append("{")
+                if start is None:
+                    start = i
+            elif c == "}":
+                stack.pop()
+                end = i
+        assert start is not None
+        assert end is not None
+
+        content = self.content[start:end+1]
+        log("limited to", content)
         import ujson
 
-        return ujson.loads(self.content)
+        return ujson.loads(content)
+
 
 
 async def get(url: str) -> Response:
     """Very basic async http/1.1 get"""
+    log("Getting:", url)
     import usocket
     import ussl
 
@@ -113,6 +134,7 @@ async def get(url: str) -> Response:
         await swriter.drain()
 
         _, status, reason = (await sreader.readline()).split(None, 2)
+        log(status, reason)
         if status != b"200":
             raise Exception(
                 "Failed to fetch {}/{}:{} : {}".format(
