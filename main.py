@@ -14,8 +14,10 @@ def instrument(f, name=""):
     print(f"{name} Took: {time.ticks_diff(end, start)} ms")
     return resp
 
+
 def log(*args) -> None:
     print("LOG:", *args)
+
 
 def settime():
     try:
@@ -90,7 +92,7 @@ class Response:
         start, end = None, None
         stack = []
         for i, c in enumerate(self.content.decode()):
-            if c ==  "{":
+            if c == "{":
                 stack.append("{")
                 if start is None:
                     start = i
@@ -100,12 +102,11 @@ class Response:
         assert start is not None
         assert end is not None
 
-        content = self.content[start:end+1]
+        content = self.content[start : end + 1]
         log("limited to", content)
         import ujson
 
         return ujson.loads(content)
-
 
 
 async def get(url: str) -> Response:
@@ -182,9 +183,9 @@ class AutoDSTClock(DSTClock):
 class MatrixDisplay:
     PULSE_DURATION_MS = 3
     _SEGMENTS = bytearray(
-        b"\x3F\x06\x5B\x4F\x66\x6D\x7D\x07\x7F\x6F\x77\x7C\x39\x5E\x79\x71\x3D"
-        b"\x76\x06\x1E\x76\x38\x55\x54\x3F\x73\x67\x50\x6D\x78\x3E\x1C\x2A\x76"
-        b"\x6E\x5B\x00\x40\x63"
+        b"\x3f\x06\x5b\x4f\x66\x6d\x7d\x07\x7f\x6f\x77\x7c\x39\x5e\x79\x71\x3d"
+        b"\x76\x06\x1e\x76\x38\x55\x54\x3f\x73\x67\x50\x6d\x78\x3e\x1c\x2a\x76"
+        b"\x6e\x5b\x00\x40\x63"
     )
 
     def __init__(self, D: tuple, digits: tuple, inverted: "set | None" = None):
