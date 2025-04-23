@@ -157,7 +157,8 @@ async def get(url: str) -> Response:
 
 class AutoDSTClock(DSTClock):
     async def set(self):
-        resp = await get("https://ifconfig.me")
+        # require ipv4
+        resp = await get("https://ipv4.icanhazip.com")
         ip = resp.text
         resp = await get(f"https://www.timeapi.io/api/Time/current/ip?ipAddress={ip}")
         data = resp.json
